@@ -3,4 +3,4 @@
 
 Flask RESTful Service Backend
 
-Deployed on Heroku at https://flask-backend1.herokuapp.com/
+Deployed on Heroku at https://quotes-flask.herokuapp.com/
