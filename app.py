@@ -17,6 +17,11 @@ db = SQLAlchemy(app)
 # Init Marshmallow
 ma = Marshmallow(app)
 
+# Entry point
+@app.route('/')
+def index():
+    return "<h1> Deployed to heroku succesfully!!! </h1>"
+
 # User Class/Model
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -37,11 +42,6 @@ class UserSchema(ma.Schema):
 # Init Schema User
 user_schema = UserSchema()
 users_schema = UserSchema(many=True)
-
-# Entry point
-@app.route('/')
-def index():
-    return "<h1> Deployed to heroku succesfully!!! </h1>"
 
 # Create a Product
 @app.route('/user', methods=['POST'])
