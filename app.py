@@ -38,6 +38,11 @@ class UserSchema(ma.Schema):
 user_schema = UserSchema()
 users_schema = UserSchema(many=True)
 
+# Entry point
+@app.route('/')
+def index():
+    return "<h1> Deployed to heroku!!! </h1>"
+
 # Create a Product
 @app.route('/user', methods=['POST'])
 def add_user():
