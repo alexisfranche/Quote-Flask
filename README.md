@@ -1,4 +1,5 @@
 # Flask-REST
+[![Build Status](https://travis-ci.com/alexisfranche/flask-backend.svg?branch=master)](https://travis-ci.com/alexisfranche/flask-backend)
 
 Flask RESTful Service Backend
 
