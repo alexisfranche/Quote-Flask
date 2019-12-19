@@ -8,7 +8,15 @@ app = Flask(__name__)
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 # Database
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'db.sqlite')
+ENV = 'prod'
+
+if ENV == 'dev':
+    app.debug = True
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:123456@localhost/quotes-flask'
+else:
+    app.debug = False
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://sboixugobxlpez:57412f9a50add0d225b63e2dcfed2e83c27d212706f8270ea1b1c81a61b14a68@ec2-107-21-209-1.compute-1.amazonaws.com:5432/dvtbt5r7np4lm'
+
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Init db
@@ -149,4 +157,4 @@ db.create_all()
 
 # Run Server 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
