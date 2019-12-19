@@ -41,7 +41,7 @@ users_schema = UserSchema(many=True)
 # Entry point
 @app.route('/')
 def index():
-    return "<h1> Deployed to heroku!!! </h1>"
+    return "<h1> Deployed to heroku, testing auto deploy!!! </h1>"
 
 # Create a Product
 @app.route('/user', methods=['POST'])
