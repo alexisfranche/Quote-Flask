@@ -154,7 +154,7 @@ def delete_product(id):
 # This resets database when pushed to github,
 # Once pushed in terminal do heroku run python then
 # from app import db --> db.create_all() to init database
-db.create_all()
+#db.create_all()
 
 # Run Server 
 if __name__ == '__main__':
