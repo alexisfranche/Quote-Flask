@@ -8,11 +8,11 @@ app = Flask(__name__)
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 # Database
-ENV = 'dev'
+ENV = 'prod'
 
 if ENV == 'dev':
     app.debug = True
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:***REMOVED***@localhost/quotes-flask'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:132456@localhost/quotes-flask'
 else:
     app.debug = False
     app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://ekaajrvphjkqjw:4747fb9f71d7d0313ed8854e5a3148d040d295e2d90df6ccf06072cdbe9f1294@ec2-107-21-209-1.compute-1.amazonaws.com:5432/dh25o76ojvfod'
@@ -89,7 +89,7 @@ def delete_userByID(id):
     db.session.delete(user)
     db.session.commit()
 
-    return user_schema.jsonify(product)
+    return user_schema.jsonify(user)
 
 # Delete user by name
 @app.route('/user/delName/<name>', methods=['DELETE'])
@@ -98,7 +98,7 @@ def delete_userByName(name):
     db.session.delete(user)
     db.session.commit()
 
-    return user_schema.jsonify(product)
+    return user_schema.jsonify(user)
 
 # Get all users
 @app.route('/user', methods=['GET'])
@@ -116,10 +116,10 @@ def get_userById(id):
 # Get single user by username
 @app.route('/user/name/<name>', methods=['GET'])
 def get_userByName(name):
-    user = User.query.get(name)
+    user = User.query.filter(User.username == name).first()
     return user_schema.jsonify(user)  
 
-# Product Class/Model
+# Quote Class/Model
 class Quote(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     author = db.Column(db.String(50))
@@ -130,17 +130,17 @@ class Quote(db.Model):
         self.content=content
 
 
-# Product Schema
+# Quote Schema
 class QuoteSchema(ma.Schema):
     class Meta:
         fields = ('id', 'author', 'content')
 
 
-# Init Schema Product
+# Init Schema quote
 quote_schema = QuoteSchema()
 quotes_schema = QuoteSchema(many=True)
 
-# Create a Product
+# Create a quote
 @app.route('/quote', methods=['POST'])
 def add_quote():
     author = request.json['author']
@@ -153,20 +153,20 @@ def add_quote():
 
     return quote_schema.jsonify(new_quote)
 
-# Get all products
+# Get all quotes
 @app.route('/quote', methods=['GET'])
 def get_quotes():
     all_quotes = Quote.query.all()
     result = quotes_schema.dump(all_quotes)
     return jsonify(result)
 
-# Get single products
+# Get single quote
 @app.route('/quote/<id>', methods=['GET'])
 def get_quote(id):
     quote = Quote.query.get(id)
-    return quote_schema.jsonify(product)
+    return quote_schema.jsonify(quote)
 
-# Update a Product
+# Update a quote
 @app.route('/quote/<id>', methods=['PUT'])
 def update_quote(id):
     quote = Quote.query.get(id)
@@ -181,19 +181,20 @@ def update_quote(id):
 
     return quote_schema.jsonify(quote)
 
-# Delete product by id
+# Delete quote by id
 @app.route('/quote/<id>', methods=['DELETE'])
 def delete_quote(id):
     quote = Quote.query.get(id)
     db.session.delete(quote)
     db.session.commit()
 
-    return quote_schema.jsonify(product)
+    return quote_schema.jsonify(quote)
 
 # This resets database when pushed to github,
 # Once pushed in terminal do heroku run python then
 # from app import db --> db.create_all() to init database
-#db.create_all()
+if ENV == 'dev':
+    db.create_all()
 
 # how to reset postgres db --> heroku restart --app quotes-flask and then heroku pg:reset DATABASE --app quotes-flask
 
