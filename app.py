@@ -8,11 +8,11 @@ app = Flask(__name__)
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 # Database
-ENV = 'prod'
+ENV = 'dev'
 
 if ENV == 'dev':
     app.debug = True
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:123456@localhost/quotes-flask'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:Ernest199807@localhost/quotes-flask'
 else:
     app.debug = False
     app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://ekaajrvphjkqjw:4747fb9f71d7d0313ed8854e5a3148d040d295e2d90df6ccf06072cdbe9f1294@ec2-107-21-209-1.compute-1.amazonaws.com:5432/dh25o76ojvfod'
@@ -62,48 +62,91 @@ def add_user():
 
     return user_schema.jsonify(new_user)
 
+# Update a user
+@app.route('/user/passID/<id>', methods=['PUT'])
+def update_passwordByID(id):
+    user = User.query.get(id)
+    password = request.json['password']
+    user.password = password
+    db.session.commit()
+
+    return user_schema.jsonify(user)
+
+# Update a user by username
+@app.route('/user/passName/<name>', methods=['PUT'])
+def update_passwordByName(name):
+    user = User.query.filter(User.username == name).first()
+    password = request.json['password']
+    user.password = password
+    db.session.commit()
+
+    return user_schema.jsonify(user)
+
+# Delete user by id
+@app.route('/user/delID/<id>', methods=['DELETE'])
+def delete_userByID(id):
+    user = User.query.get(id)
+    db.session.delete(user)
+    db.session.commit()
+
+    return user_schema.jsonify(product)
+
+# Delete user by name
+@app.route('/user/delName/<name>', methods=['DELETE'])
+def delete_userByName(name):
+    user = User.query.filter(User.username == name).first()
+    db.session.delete(user)
+    db.session.commit()
+
+    return user_schema.jsonify(product)
+
 # Get all users
 @app.route('/user', methods=['GET'])
 def get_users():
     all_users = User.query.all()
     result = users_schema.dump(all_users)
     return jsonify(result)
-    
+
+# Get single user by id
+@app.route('/user/id/<id>', methods=['GET'])
+def get_userById(id):
+    user = User.query.get(id)
+    return user_schema.jsonify(user)  
+
+# Get single user by username
+@app.route('/user/name/<name>', methods=['GET'])
+def get_userByName(name):
+    user = User.query.get(name)
+    return user_schema.jsonify(user)  
 
 # Product Class/Model
-class Product(db.Model):
+class Quote(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), unique=True)
-    description = db.Column(db.String(200))
-    price = db.Column(db.Float)
-    qty = db.Column(db.Integer)
+    author = db.Column(db.String(50))
+    content = db.Column(db.String(300))
 
-    def __init__(self, name, description, price, qty):
-        self.name=name
-        self.description=description
-        self.price=price
-        self.qty=qty
+    def __init__(self, author, content):
+        self.author=author
+        self.content=content
 
 
 # Product Schema
-class ProductSchema(ma.Schema):
+class QuoteSchema(ma.Schema):
     class Meta:
-        fields = ('id', 'name', 'description', 'price', 'qty')
+        fields = ('id', 'author', 'content')
 
 
 # Init Schema Product
-product_schema = ProductSchema()
-products_schema = ProductSchema(many=True)
+quote_schema = QuoteSchema()
+quotes_schema = QuoteSchema(many=True)
 
 # Create a Product
-@app.route('/product', methods=['POST'])
-def add_product():
-    name = request.json['name']
-    description = request.json['description']
-    price = request.json['price']
-    qty = request.json['qty']
+@app.route('/quote', methods=['POST'])
+def add_quote():
+    author = request.json['author']
+    content = request.json['content']
 
-    new_product = Product(name, description, price, qty)
+    new_product = Quote(author, content)
 
     db.session.add(new_product)
     db.session.commit()
