@@ -15,7 +15,7 @@ if ENV == 'dev':
     app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:123456@localhost/quotes-flask'
 else:
     app.debug = False
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://sboixugobxlpez:57412f9a50add0d225b63e2dcfed2e83c27d212706f8270ea1b1c81a61b14a68@ec2-107-21-209-1.compute-1.amazonaws.com:5432/dvtbt5r7np4lm'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://ekaajrvphjkqjw:4747fb9f71d7d0313ed8854e5a3148d040d295e2d90df6ccf06072cdbe9f1294@ec2-107-21-209-1.compute-1.amazonaws.com:5432/dh25o76ojvfod'
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
