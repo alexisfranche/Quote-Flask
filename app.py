@@ -156,6 +156,8 @@ def delete_product(id):
 # from app import db --> db.create_all() to init database
 #db.create_all()
 
+# how to reset postgres db --> heroku restart --app quotes-flask and then heroku pg:reset DATABASE --app quotes-flask
+
 # Run Server 
 if __name__ == '__main__':
     app.run()
