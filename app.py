@@ -33,32 +33,29 @@ def index():
 # User Class/Model
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), unique=False)
-    job = db.Column(db.String(200))
-    salary = db.Column(db.Float)
+    username = db.Column(db.String(100), unique=True)
+    password = db.Column(db.String(200))
 
-    def __init__(self, name, job, salary):
-        self.name=name
-        self.job=job
-        self.salary=salary
+    def __init__(self, username, password):
+        self.username=username
+        self.password=password
 
 # User Schema
 class UserSchema(ma.Schema):
     class Meta:
-        fields = ('id', 'name', 'job', 'salary')
+        fields = ('id', 'username', 'password')
 
 # Init Schema User
 user_schema = UserSchema()
 users_schema = UserSchema(many=True)
 
-# Create a Product
+# Create a user
 @app.route('/user', methods=['POST'])
 def add_user():
-    name = request.json['name']
-    job = request.json['job']
-    salary = request.json['salary']
+    username = request.json['username']
+    password = request.json['password']
 
-    new_user = User(name, job, salary)
+    new_user = User(username, password)
 
     db.session.add(new_user)
     db.session.commit()
@@ -71,6 +68,7 @@ def get_users():
     all_users = User.query.all()
     result = users_schema.dump(all_users)
     return jsonify(result)
+    
 
 # Product Class/Model
 class Product(db.Model):
@@ -153,6 +151,9 @@ def delete_product(id):
 
     return product_schema.jsonify(product)
 
+# This resets database when pushed to github,
+# Once pushed in terminal do heroku run python then
+# from app import db --> db.create_all() to init database
 db.create_all()
 
 # Run Server 
