@@ -146,53 +146,49 @@ def add_quote():
     author = request.json['author']
     content = request.json['content']
 
-    new_product = Quote(author, content)
+    new_quote = Quote(author, content)
 
-    db.session.add(new_product)
+    db.session.add(new_quote)
     db.session.commit()
 
-    return product_schema.jsonify(new_product)
+    return quote_schema.jsonify(new_quote)
 
 # Get all products
-@app.route('/product', methods=['GET'])
-def get_products():
-    all_products = Product.query.all()
-    result = products_schema.dump(all_products)
+@app.route('/quote', methods=['GET'])
+def get_quotes():
+    all_quotes = Quote.query.all()
+    result = quotes_schema.dump(all_quotes)
     return jsonify(result)
 
 # Get single products
-@app.route('/product/<id>', methods=['GET'])
-def get_product(id):
-    product = Product.query.get(id)
-    return product_schema.jsonify(product)
+@app.route('/quote/<id>', methods=['GET'])
+def get_quote(id):
+    quote = Quote.query.get(id)
+    return quote_schema.jsonify(product)
 
 # Update a Product
-@app.route('/product/<id>', methods=['PUT'])
-def update_product(id):
-    product = Product.query.get(id)
+@app.route('/quote/<id>', methods=['PUT'])
+def update_quote(id):
+    quote = Quote.query.get(id)
 
-    name = request.json['name']
-    description = request.json['description']
-    price = request.json['price']
-    qty = request.json['qty']
+    author = request.json['author']
+    content = request.json['content']
 
-    product.name = name
-    product.description = description
-    product.price = price
-    product.qty = qty
+    quote.author = author
+    quote.content = content
 
     db.session.commit()
 
-    return product_schema.jsonify(product)
+    return quote_schema.jsonify(quote)
 
 # Delete product by id
-@app.route('/product/<id>', methods=['DELETE'])
-def delete_product(id):
-    product = Product.query.get(id)
-    db.session.delete(product)
+@app.route('/quote/<id>', methods=['DELETE'])
+def delete_quote(id):
+    quote = Quote.query.get(id)
+    db.session.delete(quote)
     db.session.commit()
 
-    return product_schema.jsonify(product)
+    return quote_schema.jsonify(product)
 
 # This resets database when pushed to github,
 # Once pushed in terminal do heroku run python then
