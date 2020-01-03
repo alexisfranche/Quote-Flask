@@ -1,11 +1,10 @@
-from flask import Flask, request , jsonify
+from flask import Flask, request , jsonify , render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 import os
 
 # Init app
 app = Flask(__name__)
-basedir = os.path.abspath(os.path.dirname(__file__))
 
 # Database
 ENV = 'prod'
@@ -28,7 +27,7 @@ ma = Marshmallow(app)
 # Entry point
 @app.route('/')
 def index():
-    return app.send_static_file("index.html")
+    return render_template('index.html')
 
 # User Class/Model
 class User(db.Model):
