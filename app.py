@@ -28,7 +28,7 @@ ma = Marshmallow(app)
 # Entry point
 @app.route('/')
 def index():
-    return "<h1> Deployed to heroku succesfully and connect to psql!!! </h1>"
+    return app.send_static_file("index.html")
 
 # User Class/Model
 class User(db.Model):
